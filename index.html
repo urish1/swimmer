@@ -13,6 +13,20 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .grid-cols-1 {
+                grid-template-columns: 1fr;
+            }
+            .flex-direction-column{
+                flex-direction: column;
+            }
+            .space-x-2 > * {
+                margin-inline: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-r from-blue-100 to-purple-100 p-6 rounded-lg" dir="rtl">
@@ -64,10 +78,10 @@
             swimmerList.innerHTML = ''; // Clear the list
             for (const [name, laps] of Object.entries(swimmers)) {
                 const listItem = document.createElement('li');
-                listItem.className = "bg-white border border-gray-200 rounded-md py-2 px-4 shadow-sm flex justify-between items-center";
+                listItem.className = "bg-white border border-gray-200 rounded-md py-2 px-4 shadow-sm flex flex-direction-column md:flex-row justify-between items-center";
 
                 const nameSpan = document.createElement('span');
-                nameSpan.className = "text-gray-800";
+                nameSpan.className = "text-gray-800 mb-2 md:mb-0";
                 nameSpan.textContent = name;
 
                 const lapsSpan = document.createElement('span');
