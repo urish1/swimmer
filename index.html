@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בריכות</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-100 to-purple-100 p-6 rounded-lg" dir="rtl">
+    <h1 class="text-3xl font-semibold text-center text-blue-700 mb-8">בריכות</h1>
+
+    <div class="container mx-auto bg-white rounded-lg shadow-md p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label for="swimmer-name" class="block text-gray-700 text-sm font-bold mb-2">שם שחיין:</label>
+                <input type="text" id="swimmer-name" placeholder="הזן שם שחיין" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">רשימת שחיינים</h2>
+        <ul id="swimmer-list" class="space-y-3">
+            </ul>
+    </div>
+
+    <script>
+        const swimmerNameInput = document.getElementById('swimmer-name');
+        const swimmerList = document.getElementById('swimmer-list');
+
+        let swimmers = {};
+
+
+
+        function addSwimmer() {
+            const swimmerName = swimmerNameInput.value.trim();
+
+            if (swimmerName === '') {
+                displayMessage('Please enter a swimmer\'s name.', 'error');
+                return;
+            }
+
+            if (swimmers[swimmerName]) {
+                displayMessage('Swimmer already exists.', 'error');
+                return;
+            }
+
+            swimmers[swimmerName] = 0; // Initialize laps to 0
+            updateSwimmerList();
+            swimmerNameInput.value = '';
+
+        }
+
+
+
+        function updateSwimmerList() {
+            swimmerList.innerHTML = ''; // Clear the list
+            for (const [name, laps] of Object.entries(swimmers)) {
+                const listItem = document.createElement('li');
+                listItem.className = "bg-white border border-gray-200 rounded-md py-2 px-4 shadow-sm flex justify-between items-center";
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = "text-gray-800";
+                nameSpan.textContent = name;
+
+                const lapsSpan = document.createElement('span');
+                lapsSpan.className = "font-semibold text-blue-600 flex items-center";
+                lapsSpan.style.height = '1.5rem';
+                lapsSpan.style.display = 'flex';
+                lapsSpan.style.alignItems = 'center';
+                lapsSpan.style.marginTop = '0.5rem';
+                lapsSpan.textContent = `${laps} בריכות`;
+
+                const addButtonContainer = document.createElement('div');
+                addButtonContainer.className = "flex space-x-2";
+
+                const plusButton = document.createElement('button');
+                plusButton.textContent = "+1 בריכה";
+                plusButton.className = "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow focus:outline-none focus:shadow-outline text-sm";
+                plusButton.style.fontSize = '1.2em';
+                plusButton.style.fontSize = '1rem';
+                plusButton.addEventListener('click', () => {
+                    swimmers[name] = (swimmers[name] || 0) + 1;
+                    updateSwimmerList();
+                });
+
+                const minusButton = document.createElement('button');
+                minusButton.textContent = "-1 בריכה";
+                minusButton.className = "bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded shadow focus:outline-none focus:shadow-outline text-sm";
+                minusButton.style.fontSize = '1rem';
+                minusButton.addEventListener('click', () => {
+                    swimmers[name] = Math.max(0, (swimmers[name] || 0) - 1);
+                    updateSwimmerList();
+                });
+
+                const resetButton = document.createElement('button');
+                resetButton.textContent = "אפס";
+                resetButton.className = "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded shadow focus:outline-none focus:shadow-outline text-sm";
+                resetButton.style.fontSize = '1rem';
+                resetButton.addEventListener('click', () => {
+                    swimmers[name] = 0;
+                    updateSwimmerList();
+                });
+
+                const trashButton = document.createElement('button');
+                trashButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                trashButton.className = "bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded shadow focus:outline-none focus:shadow-outline text-sm";
+                trashButton.style.fontSize = '1rem';
+                trashButton.addEventListener('click', () => {
+                    delete swimmers[name];
+                    updateSwimmerList();
+                });
+
+                addButtonContainer.appendChild(lapsSpan);
+                addButtonContainer.appendChild(plusButton);
+                addButtonContainer.appendChild(minusButton);
+                addButtonContainer.appendChild(resetButton);
+                addButtonContainer.appendChild(trashButton);
+
+
+                listItem.appendChild(nameSpan);
+                listItem.appendChild(addButtonContainer);
+                listItem.style.direction = "rtl";
+                swimmerList.appendChild(listItem);
+            }
+        }
+
+
+
+        swimmerNameInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                addSwimmer();
+            }
+        });
+    </script>
+</body>
+</html>
